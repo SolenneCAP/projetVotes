@@ -22,7 +22,7 @@ class ProjetVotesApplicationTests {
 
     @Test
     public void testGetProjet() throws Exception {
-        mockMvc.perform(get("/projets")).andExpect(status().isOk()).andExpect(jsonPath("$[0].creePar", is("Solenne")));
+        mockMvc.perform(get("/projets")).andExpect(status().isOk()).andExpect(jsonPath("$[1].creePar", is("Solenne")));
     }
 
 }
