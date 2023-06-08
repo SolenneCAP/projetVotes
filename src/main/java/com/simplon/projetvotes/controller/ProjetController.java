@@ -1,6 +1,7 @@
 package com.simplon.projetvotes.controller;
 
 import com.simplon.projetvotes.model.Projet;
+import com.simplon.projetvotes.repository.ProjetRepository;
 import com.simplon.projetvotes.service.ProjetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,9 @@ public class ProjetController {
     @Autowired
 
     private ProjetService projetService;
+
+    public ProjetController(ProjetRepository pRepository) {
+    }
 
     /**
      * Création - Ajout d'un nouveau projet
@@ -35,11 +39,7 @@ public class ProjetController {
     @GetMapping("/projet/{idProjet}")
     public Projet getProjet(@PathVariable final Long idProjet) {
         Optional<Projet> projet = projetService.getProjet(idProjet);
-        if (projet.isPresent()) {
-            return projet.get();
-        } else {
-            return null;
-        }
+        return projet.orElse(null);
     }
 
     /**
@@ -82,12 +82,15 @@ public class ProjetController {
 
     /**
      * Supprimer - Supprimer un projet
+     *
      * @param idProjet - L'identifiant du projet à supprimer
+     * @return
      */
 
     @DeleteMapping("/projet/{idProjet}")
-    public void deleteProjet(@PathVariable("idProjet") final Long idProjet){
+    public ResponseEntity<String> deleteProjet(@PathVariable("idProjet") final Long idProjet) {
         projetService.deleteProjet(idProjet);
+        return ResponseEntity.ok("Le projet a été supprimé avec succès");
     }
 }
 
