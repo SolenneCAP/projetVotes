@@ -16,3 +16,4 @@ public class EntityNotFoundException extends RuntimeException {
         return this.idObject;
     }
 }
+

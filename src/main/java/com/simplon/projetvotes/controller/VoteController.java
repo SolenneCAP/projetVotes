@@ -1,11 +1,11 @@
 package com.simplon.projetvotes.controller;
 
 
-import com.simplon.projetvotes.EntityNotFoundException;
 import com.simplon.projetvotes.model.Projet;
 import com.simplon.projetvotes.model.Vote;
 import com.simplon.projetvotes.repository.ProjetRepository;
 import com.simplon.projetvotes.repository.VoteRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
