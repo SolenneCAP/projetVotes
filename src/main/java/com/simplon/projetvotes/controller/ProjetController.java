@@ -4,6 +4,7 @@ import com.simplon.projetvotes.model.Projet;
 import com.simplon.projetvotes.repository.ProjetRepository;
 import com.simplon.projetvotes.service.ProjetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,10 +54,10 @@ public class ProjetController {
     }
 
     /**
-     * Mettre à jour - Mettre à jour un projet existant
+     * Mettre &agrave; jour - Mettre &agrave; jour un projet existant
      *
-     * @param idProjet - L'identifiant du projet à mettre à jour
-     * @param projet   - L'objet projet mis à jour
+     * @param idProjet - L'identifiant du projet &agrave; mettre &agrave; jour
+     * @param projet   - L'objet projet mis &agrave; jour
      * @return
      */
     @PutMapping("/projet/{idProjet}")
@@ -89,8 +90,14 @@ public class ProjetController {
 
     @DeleteMapping("/projet/{idProjet}")
     public ResponseEntity<String> deleteProjet(@PathVariable("idProjet") final Long idProjet) {
-        projetService.deleteProjet(idProjet);
-        return ResponseEntity.ok("Le projet a été supprimé avec succès");
+        try {
+            projetService.deleteProjet(idProjet);
+            return ResponseEntity.ok("Le projet a été supprimé avec succès");
+        } catch (Exception e) {
+            // Gérer l'exception ici
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur s'est produite lors de la suppression du projet");
+        }
     }
+
 }
 

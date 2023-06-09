@@ -9,11 +9,14 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,21 +33,21 @@ public class VoteController {
 
     @SneakyThrows
     @GetMapping(path = "/votes/{projetIdProjet}")
-    public String votesByProjet(@PathVariable Long projetIdProjet, Model model) {
+    public ResponseEntity<Collection<Vote>> votesByProjet(@PathVariable Long projetIdProjet, Model model) {
         Optional<Projet> projetOptional = mRepository.findByProjetIdProjet(projetIdProjet);
         if (projetOptional.isPresent()) {
             Projet projet = projetOptional.get();
             model.addAttribute("projet", projet);
             model.addAttribute("votes", projet.getVotes());
+            return ResponseEntity.ok(projet.getVotes());
         } else {
             throw new EntityNotFoundException("Le projet avec l'ID " + projetIdProjet + " n'existe pas.");
         }
-        return "votes";
     }
 
     @PostMapping(path = "/votes/{projetIdProjet}")
-    public String vote(
-            @PathVariable Long projetIdProjet, @Valid @ModelAttribute Vote vote, BindingResult validation, Model model) {
+    public ResponseEntity<?> vote(
+            @PathVariable Long projetIdProjet, @Valid @RequestBody Vote vote, BindingResult validation, Model model) {
         Projet projet = mRepository.getReferenceByIdProjet(projetIdProjet);
         if (projet != null) {
             model.addAttribute("projet", projet);
@@ -57,16 +60,19 @@ public class VoteController {
                     vote.setVoteLe(LocalDateTime.now());
                     mVoteRepository.save(vote);
                     model.addAttribute("votes", projet.getVotes());
+                    return ResponseEntity.created(URI.create("/votes/" + vote.getIdVote())).build();
                 } else {
                     String message = String.format("L'étudiant %s a déjà voté %d fois pour ce projet.",
                             vote.getUser(),
                             existingVotes.size());
                     model.addAttribute("alreadyVoted", message);
+                    return ResponseEntity.ok(existingVotes.get(0));
                 }
             } else {
                 model.addAttribute("errors", validation);
+                return ResponseEntity.badRequest().body(validation.getAllErrors());
             }
         }
-        return "votes";
+        return ResponseEntity.badRequest().body(vote);
     }
 }
