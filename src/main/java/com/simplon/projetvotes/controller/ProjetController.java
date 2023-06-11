@@ -10,21 +10,28 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController
 
+/**
+ * Cette classe est un contrôleur REST pour la gestion des opérations liées aux projets.
+ */
+@RestController
 public class ProjetController {
     @Autowired
-
     private ProjetService projetService;
 
+    /**
+     * Constructeur de la classe ProjetController.
+     *
+     * @param pRepository le référentiel de projets utilisé par le contrôleur
+     */
     public ProjetController(ProjetRepository pRepository) {
     }
 
     /**
-     * Création - Ajout d'un nouveau projet
+     * Crée et ajoute un nouveau projet.
      *
-     * @param projet Un objet projet
-     * @return L'objet projet est enregistré
+     * @param projet l'objet projet à ajouter
+     * @return l'objet projet enregistré
      */
     @PostMapping("/projet")
     public Projet createProjet(@RequestBody Projet projet) {
@@ -32,10 +39,10 @@ public class ProjetController {
     }
 
     /**
-     * Lecture - Obtenir un projet
+     * Récupère un projet en fonction de son identifiant.
      *
-     * @param idProjet L'identifiant du projet
-     * @return Un objet projet complètement rempli
+     * @param idProjet l'identifiant du projet à récupérer
+     * @return l'objet projet complètement rempli, ou null s'il n'existe pas
      */
     @GetMapping("/projet/{idProjet}")
     public Projet getProjet(@PathVariable final Long idProjet) {
@@ -44,9 +51,9 @@ public class ProjetController {
     }
 
     /**
-     * Lecture - Obtenir tous les projets
+     * Récupère tous les projets.
      *
-     * @return Un objet Iterable de Projet complètement rempli
+     * @return un objet Iterable de Projet contenant tous les projets
      */
     @GetMapping("/projets")
     public Iterable<Projet> getProjets() {
@@ -54,11 +61,11 @@ public class ProjetController {
     }
 
     /**
-     * Mettre &agrave; jour - Mettre &agrave; jour un projet existant
+     * Met à jour un projet existant.
      *
-     * @param idProjet - L'identifiant du projet &agrave; mettre &agrave; jour
-     * @param projet   - L'objet projet mis &agrave; jour
-     * @return
+     * @param idProjet l'identifiant du projet à mettre à jour
+     * @param projet   l'objet projet mis à jour
+     * @return une réponse indiquant si la mise à jour a réussi ou si le projet n'a pas été trouvé
      */
     @PutMapping("/projet/{idProjet}")
     public ResponseEntity<String> updateProjet(@PathVariable("idProjet") Long idProjet, @RequestBody Projet projet) {
@@ -72,7 +79,6 @@ public class ProjetController {
             existingProjet.setClosLe(projet.getClosLe());
             existingProjet.setCreePar(projet.getCreePar());
 
-
             Projet updatedProjet = projetService.saveProjet(existingProjet);
 
             return ResponseEntity.ok("Projet mis à jour avec succès");
@@ -82,12 +88,11 @@ public class ProjetController {
     }
 
     /**
-     * Supprimer - Supprimer un projet
+     * Supprime un projet.
      *
-     * @param idProjet - L'identifiant du projet à supprimer
-     * @return
+     * @param idProjet l'identifiant du projet à supprimer
+     * @return une réponse indiquant si la suppression a réussi ou si une erreur s'est produite
      */
-
     @DeleteMapping("/projet/{idProjet}")
     public ResponseEntity<String> deleteProjet(@PathVariable("idProjet") final Long idProjet) {
         try {
@@ -98,6 +103,4 @@ public class ProjetController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur s'est produite lors de la suppression du projet");
         }
     }
-
 }
-

@@ -20,17 +20,34 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Cette classe est un contrôleur REST pour la gestion des opérations liées aux votes.
+ */
 @RestController
 public class VoteController {
     private final ProjetRepository mRepository;
     private final VoteRepository mVoteRepository;
 
+    /**
+     * Constructeur de la classe VoteController.
+     *
+     * @param pRepository     le référentiel de projets utilisé par le contrôleur
+     * @param pVoteRepository le référentiel de votes utilisé par le contrôleur
+     */
     @Autowired
     public VoteController(ProjetRepository pRepository, VoteRepository pVoteRepository) {
         mRepository = pRepository;
         mVoteRepository = pVoteRepository;
     }
 
+    /**
+     * Récupère les votes associés à un projet spécifié.
+     *
+     * @param projetIdProjet l'identifiant du projet pour lequel on souhaite récupérer les votes
+     * @param model          le modèle de données utilisé pour les vues
+     * @return une réponse contenant une collection de votes associés au projet
+     * @throws EntityNotFoundException si le projet avec l'identifiant spécifié n'existe pas
+     */
     @SneakyThrows
     @GetMapping(path = "/votes/{projetIdProjet}")
     public ResponseEntity<Collection<Vote>> votesByProjet(@PathVariable Long projetIdProjet, Model model) {
@@ -45,6 +62,15 @@ public class VoteController {
         }
     }
 
+    /**
+     * Enregistre un vote pour un projet spécifié.
+     *
+     * @param projetIdProjet l'identifiant du projet pour lequel on souhaite enregistrer le vote
+     * @param vote           l'objet vote à enregistrer
+     * @param validation     les résultats de la validation du vote
+     * @param model          le modèle de données utilisé pour les vues
+     * @return une réponse indiquant le succès de l'opération ou contenant des erreurs de validation
+     */
     @PostMapping(path = "/votes/{projetIdProjet}")
     public ResponseEntity<?> vote(
             @PathVariable Long projetIdProjet, @Valid @RequestBody Vote vote, BindingResult validation, Model model) {

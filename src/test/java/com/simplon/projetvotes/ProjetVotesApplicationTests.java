@@ -12,6 +12,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+/**
+ * Classe de tests pour l'application ProjetVotes.
+ * Cette classe utilise l'annotation @SpringBootTest pour initialiser l'application Spring Boot lors des tests.
+ * Elle utilise également l'annotation @AutoConfigureMockMvc pour configurer automatiquement le MockMvc pour les requêtes HTTP simulées.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 class ProjetVotesApplicationTests {
@@ -19,10 +24,14 @@ class ProjetVotesApplicationTests {
     @Autowired
     public MockMvc mockMvc;
 
-
+    /**
+     * Teste la méthode GET pour obtenir un projet.
+     * Effectue une requête GET sur l'endpoint "/projets" et vérifie que le statut de la réponse est OK (200) et que le champ "creePar" du premier élément de la réponse correspond à la valeur "Solenne".
+     *
+     * @throws Exception si une erreur se produit lors de l'exécution du test
+     */
     @Test
     public void testGetProjet() throws Exception {
-        mockMvc.perform(get("/projets")).andExpect(status().isOk()).andExpect(jsonPath("$[1].creePar", is("Solenne")));
+        mockMvc.perform(get("/projets")).andExpect(status().isOk()).andExpect(jsonPath("$[0].creePar", is("Solenne")));
     }
-
 }

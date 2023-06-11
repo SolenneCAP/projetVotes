@@ -9,6 +9,9 @@ import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
+/**
+ * Cette classe représente un vote.
+ */
 @Entity
 @Data
 @Table(name = "votes")
@@ -23,7 +26,6 @@ public class Vote {
     @JsonIgnore
     private Projet projet;
 
-
     @NotNull
     @Column(nullable = false)
     private Boolean value;
@@ -36,7 +38,15 @@ public class Vote {
     @Column(nullable = false)
     private String user;
 
-
+    /**
+     * Constructeur de la classe Vote avec paramètres.
+     *
+     * @param pIdVote l'identifiant du vote
+     * @param pProjet le projet associé au vote
+     * @param pValue  la valeur du vote
+     * @param pVoteLe la date et l'heure du vote
+     * @param pUser   l'utilisateur ayant effectué le vote
+     */
     public Vote(Long pIdVote, Projet pProjet, Boolean pValue, LocalDateTime pVoteLe, String pUser) {
         idVote = pIdVote;
         projet = pProjet;
@@ -45,12 +55,19 @@ public class Vote {
         user = pUser;
     }
 
+    /**
+     * Constructeur par défaut de la classe Vote.
+     */
     public Vote() {
     }
 
+    /**
+     * Obtient l'identifiant du vote.
+     *
+     * @return l'identifiant du vote
+     */
     public Long getIdVote() {
         return idVote;
     }
-
-
 }
+
